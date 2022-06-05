@@ -196,11 +196,11 @@ export async function getMessageLengthByChatID(chatID,setFunc,setIsErr,maxCount)
     }
 }
 
-export async function postMessage(inputedData,setFunc,variable,setId){
+export async function postMessage(inputedData,setFunc,variable,setId,){
     try{
         const res = await axios.post(`${site_url}/messages`,inputedData)
-        setFunc([...variable,res.data])
-       // console.log(res.data._id)
+        //setFunc([...variable,res.data])
+        console.log(res.data._id)
         setId(res.data._id)
     }catch(error){
         console.log(error)

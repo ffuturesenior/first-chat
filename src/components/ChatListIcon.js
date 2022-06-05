@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import { getMessageLengthByChatID, getUser } from '../servFunctions/functions';
+import Loader from './loader';
 
 
 
@@ -16,14 +17,15 @@ const ChatListIcon=({setActiveChat,setOpponent,data})=>{
     }
     const [opponentData,setOpponentData]=useState()
     const [isErr,setIsErr]=useState(true)
-    const [isLoading,setIsLoading]=useState(true)
-    const [msgLength,setMsgLength]=useState(0)
+    const [isLoading,setIsLoading]=useState(false)
+    const [msgLength,setMsglength]=useState(0);
     useEffect(()=>{
         setIsErr(true)
         setIsLoading(true)
         getUser(opponentId,setOpponentData,setIsErr)
-        getMessageLengthByChatID(data._id,setMsgLength,setIsErr)
-        setTimeout(()=>{setIsLoading(false)},500)
+        getMessageLengthByChatID(data._id,setMsglength,setIsErr)
+        setTimeout(()=>{setIsLoading(false)},1000)
+       
     },[])
 
     
@@ -39,7 +41,7 @@ const ChatListIcon=({setActiveChat,setOpponent,data})=>{
     return(
         <div>
             {isLoading?
-                <>loading</>
+                <><Loader/></>
             :
                 <>
                 {isErr?
@@ -47,7 +49,7 @@ const ChatListIcon=({setActiveChat,setOpponent,data})=>{
                 :
                 <>
                     {msgLength==0?
-                        <></>
+                        <div></div>
                     :
                         <div style={{borderBottom:"1px solid gray",padding:"5px"}} onClick={toChat}>
                             <p style={{fontSize:"20px"}}>{opponentData.username}</p>

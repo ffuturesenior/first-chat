@@ -9,8 +9,9 @@ const Chat=()=>{
     const socket=io('https://chat-socket-sync.herokuapp.com')
     const {id,opponent}=useParams()
     const [messages,setMessages]=useState([])
-    const [lastMsgId,setLastMsgId]=useState(-1)
-    const [messagesLength,setMessagesLength]=useState()
+    const [lastMsgId,setLastMsgId]=useState("21d1d1d")
+    const [lastMsg,setLastMsg]=useState({})
+    const [messagesLength,setMessagelength]=useState(0);
     const [opponentData,setOpponentData]=useState({})
     const [isErr,setIsErr]=useState(true)
     const [isLoading,setIsLoading]=useState(true)
@@ -22,29 +23,33 @@ const Chat=()=>{
     const bottomRef=useRef()
     useEffect(()=>{
         setIsLoading(true)
-    
+        
         getUser(opponent,setOpponentData,setIsErr)
-        getMessageLengthByChatID(id,setMessagesLength,setIsErr)
+        getMessageLengthByChatID(id,setMessagelength,setIsErr)
         getMessageByChatID(id,setMessages,setIsErr,1000000,setIsMessages)
         //getMessageByChatID(id,setMessages,setIsErr,maxCount)
         setIsErr(true)
         socket.emit('joinRoom',id)
         setIsErr(false)
         setTimeout(()=>{setIsLoading(false)},2000)
+        console.log(messages.length)
         //console.log(id)
     },[opponent,id])
 
    
-     
+    
        
     socket.on('getMsg',({_id,userId,chatId,text})=>{
-        /*console.log(messages)
-        setMessages([...messages,{_id:_id-1,userId:userId,chatID:chatId,text:text,iamges:""}])
-        console.log(messages)
-        setLastMsgId(lastMsgId-1)*/
-        getMessageByChatID(id,setMessages,setIsMessages,100000,setIsMessages)
-        scrollRef.current?.scrollIntoView({behavior:"smooth"})
+        setLastMsg({_id:_id,userId:userId,chatID:chatId,text:text,iamges:" "})
+        bottomRef.current?.scrollIntoView({behavior:"smooth"})
     })
+
+    
+    useEffect(()=>{
+        console.log(lastMsg)
+        setMessages(prev=>[...prev,lastMsg])
+        bottomRef.current?.scrollIntoView({behavior:"smooth"})
+    },[lastMsg])
 
   /*  socket.on('getRedactetMsg',({i,text})=>{
         getMessageByChatID(id,setMessages,setIsErr,1000000)
@@ -55,12 +60,12 @@ const Chat=()=>{
         /*console.log(i.i)        
         console.log(messages)
         const hui=messages.filter((p)=>{
-            if(p._id!=i.i) return p
+            if(p._id!==i.i) return p
         })
         setMessages(hui)
         console.log(messages)*/
         getMessageByChatID(id,setMessages,setIsErr,100000,setIsMessages)
-        scrollRef.current?.scrollIntoView({behavior:"smooth"})
+       // bottomRef.current?.scrollIntoView({behavior:"smooth"})
     })
 
     const redactMsg=(i,text)=>{
@@ -91,11 +96,12 @@ const Chat=()=>{
             formData.append('userId',localStorage.getItem('userID'))
             formData.append('chatID',id)
             formData.append('text',message.text)
-            postMessage(formData,setMessages,messages,setLastMsgId)
-            //getMessageByChatID(id,setMessages,setIsErr)
+            postMessage(formData,setMessages,messages,setLastMsgId).then(()=>{ 
+                socket.emit('sendMsg',lastMsgId,localStorage.getItem('userID'),message.text,id)
+                setMessage({...message,text:""})
+            })
         }
-        socket.emit('sendMsg',lastMsgId,localStorage.getItem('userID'),message.text,id)
-        setMessage({...message,text:""})
+        
     }
 
     const rld=()=>{

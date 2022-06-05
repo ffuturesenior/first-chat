@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import ChatListIcon from "../components/ChatListIcon";
+import Loader from "../components/loader";
 import NestedChat from "../components/NestedChat";
 import { createRoom, getP2PChatByUserId, getparcipiantsByUserId, getRooms } from "../servFunctions/functions";
 
@@ -8,31 +9,31 @@ import { createRoom, getP2PChatByUserId, getparcipiantsByUserId, getRooms } from
 const Main=()=>{
     const [chats,setChats]=useState([])
     const [parcipiants,setParcipiants]=useState([])
-    const [rooms,setRooms]=useState([])
+    //const [rooms,setRooms]=useState([])
     const [isErr,setIsErr]=useState(true)
-    const [isLoading,setIsLoading]=useState(true)
-    const [roomName,setRoomName]=useState('')
+    const [isLoading,setIsLoading]=useState(false)
+    //const [roomName,setRoomName]=useState('')
     const [activeChat,setActiveChat]=useState('0')
     const [opponent,setOpponent]=useState('0')
     const router=useHistory()
     useEffect(()=>{
       setIsLoading(true)
       getP2PChatByUserId(localStorage.getItem("userID"),setChats,setIsErr)
-      setTimeout(()=>{setIsLoading(false)},1500)
+      setTimeout(()=>{setIsLoading(false)},3000)
     },[])
 
-    const createChat=()=>{
+    /*const createChat=()=>{
         createRoom(roomName)
         setRoomName("")
         getparcipiantsByUserId(localStorage.getItem('userID'),setParcipiants,setIsErr)
-    } 
+    } */
 
     
 
     return(
         <div style={{overflowY:"hidden"}}>
           {isLoading?
-            <>loading</>
+            <><Loader/></>
           :
             <>
               <div style={{display:"grid",gridTemplateColumns:"20% 1fr",gridTemplateRows:"100%",flex:"1 1 auto"}}>
@@ -49,11 +50,11 @@ const Main=()=>{
                           <ChatListIcon data={p} setActiveChat={setActiveChat} setOpponent={setOpponent} />
                         </div>  
                       )}
-                      {rooms.map(p=>
+                      {/*rooms.map(p=>
                         <div key={p._id}>
                           {p.name}
                         </div>  
-                      )}
+                      )*/}
                       {/*<div>
                         <strong>add room</strong>
                         <input value={roomName} onChange={(e)=>setRoomName(e.target.value)}/>

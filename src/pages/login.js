@@ -21,14 +21,21 @@ const Login=()=>{
         localStorage.removeItem('userID')
     }
 
+    const login1=(e)=>{
+        e.preventDefault()
+        dispatch(login(userFormData,setIsAdmin))
+    }
+
     return(
         <div style={{textAlign:"center"}}>
             login
-            <div style={{textAlign:"center"}}>               
-                <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"10px",padding:"5px",margin:"5px 0px"}}  type="text" value={userFormData.username} onChange={(e)=>{setUserFormData({...userFormData,username:e.target.value})}} placeholder="username"/><br/>
-                <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"10px",padding:"5px",margin:"5px 0px"}}  type="text"  value={userFormData.email} onChange={(e)=>{setUserFormData({...userFormData,email:e.target.value})}} placeholder="email"/><br/>
-                <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"10px",padding:"5px",margin:"5px 0px"}}  type="password"  value={userFormData.password} onChange={(e)=>{setUserFormData({...userFormData,password:e.target.value})}} placeholder="password"/><br/>
-                <button style={{display:"inline-block",border:"1px solid black",borderRadius:"10px",padding:"5px",margin:"5px 0px"}} onClick={()=>dispatch(login(userFormData,setIsAdmin))}>submit</button><br/>
+            <div style={{textAlign:"center"}}>
+                <form>
+                <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"20px",padding:"15px",margin:"5px 0px"}}  type="text" value={userFormData.username} onChange={(e)=>{setUserFormData({...userFormData,username:e.target.value})}} placeholder="username"/><br/>
+                <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"20px",padding:"15px",margin:"5px 0px"}}  type="text"  value={userFormData.email} onChange={(e)=>{setUserFormData({...userFormData,email:e.target.value})}} placeholder="email"/><br/>
+                <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"20px",padding:"15px",margin:"5px 0px"}}  type="password"  value={userFormData.password} onChange={(e)=>{setUserFormData({...userFormData,password:e.target.value})}} placeholder="password"/><br/>
+                <button style={{display:"inline-block",border:"1px solid black",borderRadius:"10px",padding:"5px",margin:"5px 0px"}} onClick={login1}>submit</button><br/>
+                </form>               
                 {isAuth?
                     <><button style={{display:"inline-block",border:"1px solid black",borderRadius:"10px",padding:"5px",margin:"5px 0px"}} onClick={unlog}>log out</button><br/></>
                 :
