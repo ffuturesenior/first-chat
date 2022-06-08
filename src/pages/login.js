@@ -1,13 +1,19 @@
-import React,{useCallback, useContext, useState} from "react";
+import axios from 'axios'
+import React,{useCallback, useContext, useEffect, useState} from "react";
 import { login } from "../servFunctions/functions";
 import {useDispatch} from 'react-redux'
 import { logout } from "../redux/userReducer";
 import { AdminContext } from "..";
 import { useSelector } from "react-redux";
+import { isMobile } from 'react-device-detect'
+import { setUser } from '../redux/userReducer'
 
 const Login=()=>{
+    const site_url=`https://chat-db-sync.herokuapp.com/chathuyat`
     const {isAdmin,setIsAdmin}=useContext(AdminContext)
     const isAuth=useSelector(state=>state.user.isAuth)
+    const [secondReqToggle,setSecondReqToggle]=useState(false)
+    const [isLoading,setIsLoading]=useState(true)
     const [userFormData,setUserFormData]=useState({
         username:"",
         email:"",
@@ -20,11 +26,45 @@ const Login=()=>{
         setIsAdmin(false)
         localStorage.removeItem('userID')
     }
+    async function firstReq(userData,email,setIsAdmin){
+        try{
+            if(!userData.email||!userData.username||!userData.password){
+                return res.status(400).alert("bad request")
+            }
+            const res= await axios.post(`${site_url}/users/login`,{
+                username:userData.username,
+                email:email,
+                pswd:userData.password,
+                admin:false,
+                caption:" ",
+                avatar:" "
+            })
+            dispatch(setUser(res.data.user))
+            localStorage.setItem('userID',res.data.user.id)
+            setIsAdmin(res.data.user.admin)
+            console.log(res.data)
+            alert("logined")
+        }catch(e){
+            alert(e.response.data.message)
+        }    
+    }
 
     const login1=(e)=>{
+        setIsLoading(true)
         e.preventDefault()
-        dispatch(login(userFormData,setIsAdmin))
+        firstReq(userFormData,`${userFormData.email}`,setIsAdmin)
+        //dispatch(login(userFormData,setIsAdmin))
+        setSecondReqToggle(true)
     }
+
+    useEffect(()=>{
+        if(secondReqToggle==true){
+            dispatch(login(userFormData,setIsAdmin))
+            setSecondReqToggle(false)
+            setIsLoading(false)
+        }
+    },[secondReqToggle])
+
 
     return(
         <div style={{textAlign:"center"}}>
@@ -41,6 +81,7 @@ const Login=()=>{
                 :
                     <></>
                 }
+                {isMobile?<>mobile</>:<>non mobile</>}
             </div>
         </div>
     )
