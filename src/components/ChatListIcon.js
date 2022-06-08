@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect';
 import { useHistory } from 'react-router-dom';
 import { getMessageLengthByChatID, getUser } from '../servFunctions/functions';
 import Loader from './loader';
@@ -33,8 +34,12 @@ const ChatListIcon=({setActiveChat,setOpponent,data})=>{
     
     
     const toChat=()=>{
-        setActiveChat(data._id)
-        setOpponent(opponentId)
+        if(isMobile){
+            router.push(`/p2pchat/${data._id}&${opponentId}`)
+        }else{
+            setActiveChat(data._id)
+            setOpponent(opponentId)
+        }
     }
     
     

@@ -72,7 +72,7 @@ const Login=()=>{
         <div style={{textAlign:"center"}}>
             login
             <div style={{textAlign:"center"}}>
-                <form netlify>
+                <form>
                 <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"20px",padding:"15px",margin:"5px 0px"}}  type="text" value={userFormData.username} onChange={(e)=>{setUserFormData({...userFormData,username:e.target.value})}} placeholder="username"/><br/>
                 <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"20px",padding:"15px",margin:"5px 0px"}}  type="text"  value={userFormData.email} onChange={(e)=>{setUserFormData({...userFormData,email:e.target.value})}} placeholder="email"/><br/>
                 <input style={{display:"inline-block",border:"2px solid blue",borderRadius:"20px",padding:"15px",margin:"5px 0px"}}  type="password"  value={userFormData.password} onChange={(e)=>{setUserFormData({...userFormData,password:e.target.value})}} placeholder="password"/><br/>
@@ -83,7 +83,7 @@ const Login=()=>{
                 :
                     <></>
                 }
-                {isMobile?<>mobile</>:<>non mobile</>}
+                
             </div>
         </div>
     )
