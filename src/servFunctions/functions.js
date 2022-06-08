@@ -28,7 +28,7 @@ export async function registrate(e,userData){
     }
 }
 
-export const login=(userData,setIsAdmin)=>{
+export const login=(userData,email,setIsAdmin)=>{
     return async dispatch=>{
         try{
             if(!userData.email||!userData.username||!userData.password){
@@ -36,7 +36,7 @@ export const login=(userData,setIsAdmin)=>{
             }
             const res= await axios.post(`${site_url}/users/login`,{
                 username:userData.username,
-                email:userData.email,
+                email:email,
                 pswd:userData.password,
                 admin:false,
                 caption:" ",

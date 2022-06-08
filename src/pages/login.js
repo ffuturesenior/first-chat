@@ -26,7 +26,7 @@ const Login=()=>{
         setIsAdmin(false)
         localStorage.removeItem('userID')
     }
-    async function firstReq(userData,email,setIsAdmin){
+   /* async function firstReq(userData,email,setIsAdmin){
         try{
             if(!userData.email||!userData.username||!userData.password){
                 return res.status(400).alert("bad request")
@@ -47,23 +47,25 @@ const Login=()=>{
         }catch(e){
             alert(e.response.data.message)
         }    
-    }
+    }*/
 
     const login1=(e)=>{
         setIsLoading(true)
         e.preventDefault()
-        firstReq(userFormData,`${userFormData.email}`,setIsAdmin)
-        //dispatch(login(userFormData,setIsAdmin))
-        setSecondReqToggle(true)
+        const emailWhithNoSpace=userFormData.email.replace(/\s/g,'')
+        //firstReq(userFormData,emailWhithNoSpace,setIsAdmin)
+        dispatch(login(userFormData,emailWhithNoSpace,setIsAdmin))
+        //setSecondReqToggle(true)
+        setIsLoading(false)
     }
 
-    useEffect(()=>{
+    /*useEffect(()=>{
         if(secondReqToggle==true){
             dispatch(login(userFormData,setIsAdmin))
             setSecondReqToggle(false)
             setIsLoading(false)
         }
-    },[secondReqToggle])
+    },[secondReqToggle])*/
 
 
     return(
